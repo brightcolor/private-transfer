@@ -9,7 +9,7 @@
 </head>
 <body class="app-shell">
     <main class="mx-auto min-h-screen w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-        <nav class="flex flex-wrap items-center justify-between gap-3">
+        <nav class="nav-shell flex flex-wrap items-center justify-between gap-3">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
                 <span class="brand-mark">PT</span>
                 <span>
@@ -38,7 +38,7 @@
                 <div class="inline-flex rounded-full border border-teal-200 bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wide text-teal-800 shadow-sm" data-i18n="eyebrow">
                     Datenschutzfreundlicher Transfer-Workspace
                 </div>
-                <h1 class="mt-4 text-4xl font-black leading-tight text-slate-950 sm:text-5xl lg:text-6xl" data-i18n="heroTitle">Dateien senden mit Farbe, Klarheit und Kontrolle.</h1>
+                <h1 class="hero-gradient mt-4 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl" data-i18n="heroTitle">Dateien senden mit Farbe, Klarheit und Kontrolle.</h1>
                 <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8" data-i18n="heroCopy">
                     Chunked Uploads, automatischer Mailversand, private Downloads und eine klare Ablaufzeit. Lass diesen Tab offen, waehrend der Upload laeuft.
                 </p>
@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <form data-upload-form data-chunk-size="{{ $chunkSizeMb * 1024 * 1024 }}" class="soft-panel relative overflow-hidden p-5">
+            <form data-upload-form data-chunk-size="{{ $chunkSizeMb * 1024 * 1024 }}" class="soft-panel transfer-panel relative overflow-hidden p-5">
                 <span class="orbital-accent"></span>
                 <div class="mb-4 flex items-center justify-between">
                     <div>
@@ -85,6 +85,8 @@
                     </div>
                     <span class="rounded-full border border-teal-200 bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800 shadow-sm" data-i18n="ready">Bereit</span>
                 </div>
+
+                <div class="premium-divider my-4"></div>
 
                 <div data-dropzone class="dropzone">
                     <input data-files class="sr-only" type="file" multiple>

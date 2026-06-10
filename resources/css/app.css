@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './animations.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -67,6 +68,22 @@
         @apply rounded-lg border border-white/70 bg-white/90 shadow-2xl shadow-slate-900/10 backdrop-blur;
     }
 
+    .nav-shell {
+        @apply sticky top-3 z-20 rounded-lg border border-white/70 bg-white/75 px-3 py-3 shadow-xl shadow-slate-900/5 backdrop-blur-xl;
+    }
+
+    .dark .nav-shell {
+        @apply border-white/10 bg-slate-950/60 shadow-teal-950/20;
+    }
+
+    .hero-gradient {
+        @apply bg-gradient-to-r from-teal-600 via-slate-950 to-rose-600 bg-clip-text text-transparent;
+    }
+
+    .dark .hero-gradient {
+        @apply from-teal-300 via-white to-rose-300;
+    }
+
     .dark .soft-panel {
         @apply border-white/10 bg-slate-900/80 shadow-teal-950/30;
     }
@@ -108,8 +125,28 @@
         @apply absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent;
     }
 
+    .dropzone::after {
+        content: '';
+        @apply pointer-events-none absolute inset-x-6 top-0 h-16 -translate-y-full bg-gradient-to-b from-teal-300/0 via-teal-300/20 to-teal-300/0 opacity-0 transition;
+    }
+
+    .dropzone:hover::after,
+    .is-uploading .dropzone::after {
+        animation: scan-dropzone 2.4s ease-in-out infinite;
+        opacity: 1;
+    }
+
     .primary-button {
         @apply inline-flex w-full items-center justify-center rounded-md bg-gradient-to-r from-slate-950 via-teal-900 to-rose-900 px-4 py-3 font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:shadow-xl disabled:translate-y-0 disabled:cursor-not-allowed disabled:from-slate-400 disabled:to-slate-400;
+    }
+
+    .primary-button::after {
+        content: '->';
+        @apply ml-2 transition-transform;
+    }
+
+    .primary-button:hover::after {
+        transform: translateX(0.2rem);
     }
 
     .status-chip {
@@ -181,6 +218,10 @@
         @apply relative overflow-hidden rounded-md border border-white/80 bg-white/75 px-3 py-2 shadow-sm;
     }
 
+    .metric-card:hover {
+        @apply -translate-y-0.5 shadow-lg shadow-slate-900/10;
+    }
+
     .dark .metric-card {
         @apply border-white/10 bg-white/10;
     }
@@ -240,6 +281,18 @@
     .orbital-accent::after {
         @apply bottom-5 right-2 size-2 bg-rose-400 shadow-lg shadow-rose-400/30;
     }
+
+    .transfer-panel.is-uploading {
+        box-shadow: 0 24px 80px rgba(20, 184, 166, 0.18), 0 0 0 1px rgba(45, 212, 191, 0.18);
+    }
+
+    .premium-divider {
+        @apply h-px w-full bg-gradient-to-r from-transparent via-slate-300/70 to-transparent;
+    }
+
+    .dark .premium-divider {
+        @apply via-white/15;
+    }
 }
 
 .dark .text-slate-950,
@@ -280,57 +333,4 @@
 
 .dark .border-red-200 {
     border-color: rgba(248, 113, 113, 0.35) !important;
-}
-
-@keyframes progress-shine {
-    from {
-        background-position: 0 0;
-    }
-
-    to {
-        background-position: 2.4rem 0;
-    }
-}
-
-@keyframes progress-pulse {
-    0%,
-    100% {
-        filter: saturate(1);
-        box-shadow: 0 0 0 rgba(20, 184, 166, 0);
-    }
-
-    50% {
-        filter: saturate(1.25);
-        box-shadow: 0 0 24px rgba(20, 184, 166, 0.35);
-    }
-}
-
-@keyframes metric-reveal {
-    0% {
-        opacity: 0;
-        transform: translateY(0.55rem) scale(0.96);
-        box-shadow: 0 0 0 rgba(20, 184, 166, 0);
-    }
-
-    45% {
-        opacity: 1;
-        transform: translateY(-0.12rem) scale(1.06);
-        box-shadow: 0 0 22px rgba(20, 184, 166, 0.28);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        box-shadow: 0 0 0 rgba(20, 184, 166, 0);
-    }
-}
-
-@keyframes accent-spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
 }

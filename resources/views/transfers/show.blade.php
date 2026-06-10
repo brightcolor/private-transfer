@@ -8,7 +8,7 @@
 </head>
 <body class="app-shell">
     <main class="mx-auto min-h-screen max-w-4xl px-4 py-8">
-        <nav class="flex flex-wrap items-center justify-between gap-3">
+        <nav class="nav-shell flex flex-wrap items-center justify-between gap-3">
             <a href="{{ route('home') }}" class="flex items-center gap-3">
                 <span class="brand-mark">PT</span>
                 <span class="text-sm font-bold">Private Transfer</span>
