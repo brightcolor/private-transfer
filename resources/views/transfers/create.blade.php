@@ -34,18 +34,28 @@
                     Chunked uploads, automatic email delivery, private downloads, and a clean expiry policy. Keep this tab open while your upload runs.
                 </p>
 
+                <div class="mt-5 grid grid-cols-3 gap-2">
+                    <div class="mini-stat"><span class="block text-teal-700">Resume</span>chunks</div>
+                    <div class="mini-stat"><span class="block text-rose-600">Private</span>links</div>
+                    <div class="mini-stat"><span class="block text-indigo-600">Queued</span>mail</div>
+                </div>
+
+                <div class="hero-media mt-5 h-28 sm:h-40">
+                    <img src="{{ asset('images/transfer-hero.png') }}" alt="Abstract secure file transfer visual">
+                </div>
+
                 <div class="mt-8 hidden gap-3 sm:grid sm:grid-cols-3">
-                    <div class="rounded-lg border border-white/70 bg-white/70 p-4 shadow-sm">
+                    <div class="feature-card">
                         <p class="text-2xl font-black text-teal-700">01</p>
                         <p class="mt-1 text-sm font-semibold">Drop files</p>
                         <p class="mt-1 text-xs text-slate-500">Large uploads are split into resumable chunks.</p>
                     </div>
-                    <div class="rounded-lg border border-white/70 bg-white/70 p-4 shadow-sm">
+                    <div class="feature-card">
                         <p class="text-2xl font-black text-rose-600">02</p>
                         <p class="mt-1 text-sm font-semibold">Add recipient</p>
                         <p class="mt-1 text-xs text-slate-500">Only required transfer metadata is stored.</p>
                     </div>
-                    <div class="rounded-lg border border-white/70 bg-white/70 p-4 shadow-sm">
+                    <div class="feature-card">
                         <p class="text-2xl font-black text-indigo-600">03</p>
                         <p class="mt-1 text-sm font-semibold">Mail sends itself</p>
                         <p class="mt-1 text-xs text-slate-500">The queue sends links after completion.</p>
@@ -63,7 +73,7 @@
                         <h2 class="text-xl font-black">New transfer</h2>
                         <p class="text-sm text-slate-500">No accounts. No public file URLs.</p>
                     </div>
-                    <span class="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">Ready</span>
+                    <span class="rounded-full border border-teal-200 bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800 shadow-sm">Ready</span>
                 </div>
 
                 <div data-dropzone class="dropzone">
@@ -95,12 +105,27 @@
                     </div>
                 </div>
 
-                <div class="mt-5 h-3 rounded-full bg-slate-100 shadow-inner">
-                    <div data-total-bar class="h-3 rounded-full bg-gradient-to-r from-teal-400 via-cyan-500 to-rose-400 transition-all" style="width:0%"></div>
+                <div class="mt-5 grid grid-cols-3 gap-2">
+                    <div class="metric-card">
+                        <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400">Progress</p>
+                        <p data-total-text class="mt-1 text-sm font-black text-slate-900">0%</p>
+                    </div>
+                    <div class="metric-card">
+                        <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400">Speed</p>
+                        <p data-speed-text class="mt-1 text-sm font-black text-teal-700">Idle</p>
+                    </div>
+                    <div class="metric-card">
+                        <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400">ETA</p>
+                        <p data-eta-text class="mt-1 text-sm font-black text-rose-700">--</p>
+                    </div>
+                </div>
+
+                <div class="progress-track mt-3">
+                    <div data-total-bar class="progress-fill" style="width:0%"></div>
                 </div>
                 <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
                     <span data-status>Ready.</span>
-                    <span data-total-text>0%</span>
+                    <span data-uploaded-text>0 B uploaded</span>
                 </div>
 
                 <button type="submit" class="primary-button mt-5">

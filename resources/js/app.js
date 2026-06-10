@@ -7,6 +7,9 @@ if (uploadForm) {
     const list = uploadForm.querySelector('[data-file-list]');
     const totalBar = uploadForm.querySelector('[data-total-bar]');
     const totalText = uploadForm.querySelector('[data-total-text]');
+    const uploadedText = uploadForm.querySelector('[data-uploaded-text]');
+    const speedText = uploadForm.querySelector('[data-speed-text]');
+    const etaText = uploadForm.querySelector('[data-eta-text]');
     const statusText = uploadForm.querySelector('[data-status]');
     const resumePanel = document.querySelector('[data-resume-panel]');
     const chunkSize = Number(uploadForm.dataset.chunkSize);
@@ -14,6 +17,8 @@ if (uploadForm) {
     let selectedFiles = [];
     let transfer = null;
     let savedTransfer = null;
+    let progressSample = null;
+    let smoothedBytesPerSecond = 0;
 
     const formatSize = (bytes) => {
         const units = ['B', 'KB', 'MB', 'GB'];
@@ -26,21 +31,50 @@ if (uploadForm) {
         return `${size.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
     };
 
+    const formatDuration = (seconds) => {
+        if (!Number.isFinite(seconds) || seconds <= 0) {
+            return '--';
+        }
+
+        if (seconds < 60) {
+            return `${Math.ceil(seconds)}s`;
+        }
+
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.ceil(seconds % 60);
+
+        if (minutes < 60) {
+            return `${minutes}m ${remainingSeconds}s`;
+        }
+
+        return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+    };
+
+    const escapeHtml = (value) => value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+
     const renderFiles = () => {
         list.innerHTML = '';
         selectedFiles.forEach((file, index) => {
             const row = document.createElement('li');
-            row.className = 'rounded-md border border-slate-200 bg-white p-3';
+            row.className = 'rounded-md border border-white/80 bg-white/90 p-3 shadow-sm';
             row.innerHTML = `
                 <div class="flex items-center justify-between gap-3">
-                    <div class="min-w-0">
-                        <p class="truncate text-sm font-medium">${file.name}</p>
+                    <div class="flex min-w-0 items-center gap-3">
+                        <span class="grid size-9 shrink-0 place-items-center rounded-md bg-gradient-to-br from-teal-100 to-rose-100 text-xs font-black text-slate-700">FILE</span>
+                        <div class="min-w-0">
+                        <p class="truncate text-sm font-bold">${escapeHtml(file.name)}</p>
                         <p class="text-xs text-slate-500">${formatSize(file.size)}</p>
+                        </div>
                     </div>
-                    <span class="text-xs text-slate-500" data-file-status="${index}">Waiting</span>
+                    <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500" data-file-status="${index}">Waiting</span>
                 </div>
                 <div class="mt-2 h-2 rounded-full bg-slate-100">
-                    <div class="h-2 rounded-full bg-teal-500 transition-all" style="width:0%" data-file-bar="${index}"></div>
+                    <div class="h-2 rounded-full bg-gradient-to-r from-teal-400 via-cyan-500 to-rose-400 transition-all" style="width:0%" data-file-bar="${index}"></div>
                 </div>`;
             list.appendChild(row);
         });
@@ -58,8 +92,22 @@ if (uploadForm) {
         const total = transfer.files.reduce((sum, item) => sum + item.size, 0);
         const uploaded = transfer.files.reduce((sum, item) => sum + item.uploadedSize, 0);
         const percent = total > 0 ? Math.round((uploaded / total) * 100) : 0;
+        const now = Date.now();
+
+        if (progressSample && uploaded > progressSample.uploaded) {
+            const seconds = Math.max((now - progressSample.time) / 1000, 0.001);
+            const currentBytesPerSecond = (uploaded - progressSample.uploaded) / seconds;
+            smoothedBytesPerSecond = smoothedBytesPerSecond === 0
+                ? currentBytesPerSecond
+                : (smoothedBytesPerSecond * 0.65) + (currentBytesPerSecond * 0.35);
+        }
+
+        progressSample = {time: now, uploaded};
         totalBar.style.width = `${percent}%`;
         totalText.textContent = `${percent}%`;
+        uploadedText.textContent = `${formatSize(uploaded)} of ${formatSize(total)} uploaded`;
+        speedText.textContent = smoothedBytesPerSecond > 0 ? `${formatSize(smoothedBytesPerSecond)}/s` : 'Starting';
+        etaText.textContent = smoothedBytesPerSecond > 0 ? formatDuration((total - uploaded) / smoothedBytesPerSecond) : '--';
         transfer.files.forEach((item, index) => {
             const filePercent = item.size > 0 ? Math.round((item.uploadedSize / item.size) * 100) : 0;
             document.querySelector(`[data-file-bar="${index}"]`).style.width = `${filePercent}%`;
@@ -110,12 +158,15 @@ if (uploadForm) {
 
     const startUpload = async (event) => {
         event.preventDefault();
+        progressSample = null;
+        smoothedBytesPerSecond = 0;
         if (selectedFiles.length === 0) {
             statusText.textContent = 'Please choose at least one file.';
             return;
         }
 
         uploadForm.querySelector('button[type="submit"]').disabled = true;
+        totalBar.classList.add('is-uploading');
         statusText.textContent = 'Preparing transfer...';
         const form = new FormData(uploadForm);
         const payload = {
@@ -160,7 +211,10 @@ if (uploadForm) {
         }
 
         localStorage.removeItem(stateKey);
+        totalBar.classList.remove('is-uploading');
         statusText.textContent = 'Upload complete. The email is being sent automatically.';
+        speedText.textContent = 'Complete';
+        etaText.textContent = '0s';
         window.location.href = `/t/${transfer.token}`;
     };
 
@@ -178,6 +232,7 @@ if (uploadForm) {
     fileInput.addEventListener('change', () => setFiles(fileInput.files));
     uploadForm.addEventListener('submit', (event) => startUpload(event).catch((error) => {
         statusText.textContent = error.message;
+        totalBar.classList.remove('is-uploading');
         uploadForm.querySelector('button[type="submit"]').disabled = false;
     }));
 

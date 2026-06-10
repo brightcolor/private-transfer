@@ -14,6 +14,10 @@
         </a>
 
         <section class="soft-panel mt-8 p-6 sm:p-8">
+            <div class="hero-media mb-6 h-36">
+                <img src="{{ asset('images/transfer-hero.png') }}" alt="Abstract secure file transfer visual">
+            </div>
+
             <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h1 class="text-4xl font-black">Download</h1>
