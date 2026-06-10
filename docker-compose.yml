@@ -8,7 +8,9 @@ services:
       - postgres
       - redis
     volumes:
-      - app-storage:/var/www/html/storage
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   nginx:
     build:
@@ -19,7 +21,9 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - app-storage:/var/www/html/storage
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   worker:
     build:
@@ -31,7 +35,9 @@ services:
       - postgres
       - redis
     volumes:
-      - app-storage:/var/www/html/storage
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   scheduler:
     build:
@@ -43,7 +49,9 @@ services:
       - postgres
       - redis
     volumes:
-      - app-storage:/var/www/html/storage
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   postgres:
     image: postgres:18-alpine
@@ -52,7 +60,9 @@ services:
       POSTGRES_USER: private_transfer
       POSTGRES_PASSWORD: private_transfer
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - type: bind
+        source: ${PRIVATE_TRANSFER_POSTGRES_DIR:-/opt/private-transfer/postgres}
+        target: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U private_transfer"]
       interval: 10s
@@ -66,7 +76,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  app-storage:
-  postgres-data:

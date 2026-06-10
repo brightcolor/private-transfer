@@ -14,10 +14,12 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Polished download page metrics for file count, total size, and download count.
 - Optional sender notification after the first successful download.
 - Mail status indicators on the upload completion page.
+- Quickinstall script for Linux Docker hosts with `/opt/private-transfer` data directories.
 
 ### Fixed
 
 - Corrected Docker build targets so PHP services and the GHCR image build the app stage instead of the Nginx stage.
+- Switched Docker persistence from named volumes to host bind mounts below `/opt/private-transfer`.
 
 ## [0.1.0] - 2026-06-10
 

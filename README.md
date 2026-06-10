@@ -36,6 +36,17 @@ The first version was intentionally built fast with AI-assisted coding, so treat
 
 ## Local Docker Start
 
+For a first-time Docker install on a Linux host:
+
+```bash
+chmod +x quickinstall.sh
+./quickinstall.sh
+```
+
+The installer creates persistent bind-mount directories below `/opt/private-transfer` by default. Override them with `PRIVATE_TRANSFER_DATA_DIR`, `PRIVATE_TRANSFER_STORAGE_DIR`, or `PRIVATE_TRANSFER_POSTGRES_DIR` before running the script.
+
+Manual Docker start:
+
 ```bash
 cp .env.example .env
 docker compose up --build -d
@@ -47,6 +58,7 @@ Open `http://localhost:8080`.
 
 Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler services.
 The PHP services build the `app` Docker stage, while the HTTP service builds the separate `web` Nginx stage.
+Persistent Docker data is stored through host bind mounts, defaulting to `/opt/private-transfer/storage` and `/opt/private-transfer/postgres`.
 
 ## Required ENV Values
 
