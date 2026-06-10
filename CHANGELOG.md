@@ -15,6 +15,10 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Optional sender notification after the first successful download.
 - Mail status indicators on the upload completion page.
 
+### Fixed
+
+- Corrected Docker build targets so PHP services and the GHCR image build the app stage instead of the Nginx stage.
+
 ## [0.1.0] - 2026-06-10
 
 ### Added

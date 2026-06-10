@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: app
     env_file: .env
     depends_on:
       - postgres
@@ -20,7 +22,9 @@ services:
       - app-storage:/var/www/html/storage
 
   worker:
-    build: .
+    build:
+      context: .
+      target: app
     command: php artisan queue:work --sleep=1 --tries=3 --timeout=3600
     env_file: .env
     depends_on:
@@ -30,7 +34,9 @@ services:
       - app-storage:/var/www/html/storage
 
   scheduler:
-    build: .
+    build:
+      context: .
+      target: app
     command: sh -c "while true; do php artisan schedule:run --no-interaction; sleep 60; done"
     env_file: .env
     depends_on:

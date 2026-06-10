@@ -46,6 +46,7 @@ docker compose exec app php artisan migrate --force
 Open `http://localhost:8080`.
 
 Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler services.
+The PHP services build the `app` Docker stage, while the HTTP service builds the separate `web` Nginx stage.
 
 ## Required ENV Values
 
