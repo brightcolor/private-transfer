@@ -38,9 +38,9 @@
                 <div class="inline-flex rounded-full border border-teal-200 bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wide text-teal-800 shadow-sm" data-i18n="eyebrow">
                     Datenschutzfreundlicher Transfer-Workspace
                 </div>
-                <h1 class="hero-gradient mt-4 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl" data-i18n="heroTitle">Dateien senden mit Farbe, Klarheit und Kontrolle.</h1>
+                <h1 class="hero-gradient mt-4 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl" data-i18n="heroTitle">Dateien einfach und privat versenden.</h1>
                 <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8" data-i18n="heroCopy">
-                    Chunked Uploads, automatischer Mailversand, private Downloads und eine klare Ablaufzeit. Lass diesen Tab offen, waehrend der Upload laeuft.
+                    Lade Dateien hoch, teile den Download-Link automatisch per E-Mail und behalte Ablaufzeit, Passwort und Download-Limit im Griff.
                 </p>
 
                 <div class="mt-5 grid grid-cols-3 gap-2">
