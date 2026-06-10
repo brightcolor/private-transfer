@@ -11,6 +11,9 @@ The first version was intentionally built fast with AI-assisted coding, so treat
 - Sends the download link automatically after every file is complete.
 - Provides tokenized download pages, individual downloads, and ZIP downloads.
 - Supports optional sender copy, sender message, password protection, download limits, and automatic expiry.
+- Supports per-transfer retention selection up to the configured maximum.
+- Shows upload progress with speed, ETA, pause/resume, and a completion page with a copyable download link.
+- Copy-to-clipboard uses the browser Clipboard API; production deployments should use HTTPS for reliable support.
 - Stores only the data required to operate a transfer.
 
 ## What It Does Not Do

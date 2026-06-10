@@ -21,6 +21,10 @@ Route::get('/t/{token}', [TransferController::class, 'show'])
     ->middleware('throttle:60,1')
     ->name('transfers.show');
 
+Route::get('/t/{token}/sent', [TransferController::class, 'sent'])
+    ->middleware('throttle:60,1')
+    ->name('transfers.sent');
+
 Route::post('/t/{token}/unlock', [TransferController::class, 'unlock'])
     ->middleware('throttle:10,1')
     ->name('transfers.unlock');

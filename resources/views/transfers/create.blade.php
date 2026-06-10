@@ -117,6 +117,15 @@
                     </div>
                 </div>
 
+                <label class="mt-3 block text-sm font-medium" for="retention_days" data-i18n="retentionLabel">Aufbewahrung</label>
+                <select id="retention_days" name="retention_days" class="field">
+                    @foreach ([1, 3, 7, 14, 30] as $days)
+                        @if ($days <= $retentionDays)
+                            <option value="{{ $days }}" @selected($days === min(7, $retentionDays))>{{ $days }} {{ $days === 1 ? 'Tag' : 'Tage' }}</option>
+                        @endif
+                    @endforeach
+                </select>
+
                 <div class="mt-5 grid grid-cols-3 gap-2">
                     <div class="metric-card">
                         <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricProgress">Fortschritt</p>
@@ -140,9 +149,14 @@
                     <span data-uploaded-text data-i18n="uploadedIdle">0 B hochgeladen</span>
                 </div>
 
-                <button type="submit" class="primary-button mt-5" data-i18n="startTransfer">
-                    Transfer starten
-                </button>
+                <div class="mt-5 grid gap-2 sm:grid-cols-[1fr_auto]">
+                    <button type="submit" class="primary-button" data-i18n="startTransfer">
+                        Transfer starten
+                    </button>
+                    <button type="button" class="toggle-bar hidden justify-center px-4 py-3 text-sm font-bold" data-pause-upload data-i18n="pauseUpload">
+                        Pausieren
+                    </button>
+                </div>
                 <p class="mt-3 text-xs leading-5 text-slate-500" data-i18n="browserLimit">
                     Uploads laufen weiter, solange dieser Tab offen bleibt, auch im Hintergrund. Browser koennen keinen Fortschritt garantieren, wenn Tab oder Browser geschlossen werden.
                 </p>

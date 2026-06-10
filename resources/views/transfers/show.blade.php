@@ -38,6 +38,21 @@
                 <span class="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">{{ $transfer->status }}</span>
             </div>
 
+            <div class="mt-5 grid gap-3 sm:grid-cols-3">
+                <div class="metric-card">
+                    <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricFiles">Dateien</p>
+                    <p class="mt-1 text-sm font-black">{{ $transfer->files->count() }}</p>
+                </div>
+                <div class="metric-card">
+                    <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricSize">Groesse</p>
+                    <p class="mt-1 text-sm font-black">{{ \Illuminate\Support\Number::fileSize($transfer->files->sum('size')) }}</p>
+                </div>
+                <div class="metric-card">
+                    <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricDownloads">Downloads</p>
+                    <p class="mt-1 text-sm font-black">{{ $transfer->download_count }} / {{ $transfer->max_downloads ?? '∞' }}</p>
+                </div>
+            </div>
+
             @if (! $transfer->isAvailable())
                 <p class="mt-6 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800" data-i18n="notAvailable">Dieser Transfer ist nicht mehr verfuegbar.</p>
             @elseif ($locked)
@@ -53,12 +68,15 @@
                     <blockquote class="mt-6 rounded-md border border-teal-100 bg-teal-50/70 p-4 text-sm text-slate-700">{{ $transfer->message }}</blockquote>
                 @endif
 
-                <ul class="mt-6 divide-y divide-slate-100">
+                <ul class="mt-6 space-y-3">
                     @foreach ($transfer->files as $file)
-                        <li class="flex items-center justify-between gap-4 py-3">
-                            <div class="min-w-0">
-                                <p class="truncate font-medium">{{ $file->original_name }}</p>
+                        <li class="flex items-center justify-between gap-4 rounded-md border border-white/70 bg-white/75 p-3 shadow-sm">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <span class="grid size-10 shrink-0 place-items-center rounded-md bg-gradient-to-br from-teal-100 to-rose-100 text-xs font-black text-slate-700">FILE</span>
+                                <div class="min-w-0">
+                                <p class="truncate font-bold">{{ $file->original_name }}</p>
                                 <p class="text-sm text-slate-500">{{ \Illuminate\Support\Number::fileSize($file->size) }}</p>
+                                </div>
                             </div>
                             <a class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md" href="{{ route('transfers.files.download', [$transfer->public_token, $file]) }}" data-i18n="downloadFile">Download</a>
                         </li>

@@ -22,6 +22,7 @@ class TransferFlowTest extends TestCase
 
         $create = $this->postJson('/transfers', [
             'recipient_email' => 'recipient@example.com',
+            'retention_days' => 1,
             'files' => [
                 ['name' => 'report.txt', 'size' => 11, 'type' => 'text/plain'],
             ],
@@ -46,6 +47,8 @@ class TransferFlowTest extends TestCase
 
         $this->assertSame(Transfer::STATUS_COMPLETED, $transfer->status);
         $this->assertTrue($transfer->files->first()->isComplete());
+        $this->assertTrue($transfer->expires_at->isBefore(now()->addDays(2)));
+        $this->get('/t/'.$token.'/sent')->assertOk()->assertSee('Upload abgeschlossen');
         Queue::assertPushed(SendTransferNotification::class);
     }
 

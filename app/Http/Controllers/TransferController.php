@@ -26,6 +26,7 @@ class TransferController extends Controller
         return view('transfers.create', [
             'maxUploadMb' => config('transfer.max_upload_mb'),
             'chunkSizeMb' => config('transfer.chunk_size_mb'),
+            'retentionDays' => config('transfer.retention_days'),
         ]);
     }
 
@@ -38,6 +39,7 @@ class TransferController extends Controller
             'message' => ['nullable', 'string', 'max:2000'],
             'password' => ['nullable', 'string', 'min:8', 'max:128'],
             'max_downloads' => ['nullable', 'integer', 'min:1', 'max:1000'],
+            'retention_days' => ['nullable', 'integer', 'min:1', 'max:'.config('transfer.retention_days')],
             'files' => ['required', 'array', 'min:1', 'max:50'],
             'files.*.name' => ['required', 'string', 'max:255'],
             'files.*.size' => ['required', 'integer', 'min:1', 'max:'.$maxBytes],
@@ -109,6 +111,13 @@ class TransferController extends Controller
             'transfer' => $transfer,
             'locked' => $transfer->isPasswordProtected() && session('transfer_'.$transfer->id) !== true,
         ]);
+    }
+
+    public function sent(string $token): View
+    {
+        $transfer = Transfer::with('files')->where('public_token', $token)->firstOrFail();
+
+        return view('transfers.sent', ['transfer' => $transfer]);
     }
 
     public function unlock(Request $request, string $token): RedirectResponse

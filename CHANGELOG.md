@@ -4,6 +4,15 @@ All notable changes to this project are documented in this file.
 
 The format is based on Keep a Changelog, and this project follows Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Upload completion page with copyable download link and transfer summary.
+- Pause and resume control for active browser uploads.
+- Per-transfer retention selection capped by the configured maximum retention.
+- Polished download page metrics for file count, total size, and download count.
+
 ## [0.1.0] - 2026-06-10
 
 ### Added

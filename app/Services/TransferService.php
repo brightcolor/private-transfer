@@ -24,7 +24,10 @@ class TransferService
                 'message' => $data['message'] ?? null,
                 'password_hash' => filled($data['password'] ?? null) ? Hash::make($data['password']) : null,
                 'max_downloads' => $data['max_downloads'] ?? null,
-                'expires_at' => now()->addDays(config('transfer.retention_days')),
+                'expires_at' => now()->addDays(min(
+                    (int) ($data['retention_days'] ?? config('transfer.retention_days')),
+                    (int) config('transfer.retention_days'),
+                )),
                 'status' => Transfer::STATUS_PENDING,
             ]);
 
@@ -54,12 +57,12 @@ class TransferService
                 throw new RuntimeException('Upload offset does not match the server state.');
             }
 
-        $tmpDisk = Storage::disk('local');
-        $tmpPath = $this->temporaryPath($file);
-        $tmpDisk->makeDirectory(dirname($tmpPath));
+            $tmpDisk = Storage::disk('local');
+            $tmpPath = $this->temporaryPath($file);
+            $tmpDisk->makeDirectory(dirname($tmpPath));
 
-        $read = fopen($chunk->getRealPath(), 'rb');
-        $write = fopen($tmpDisk->path($tmpPath), $offset === 0 ? 'wb' : 'ab');
+            $read = fopen($chunk->getRealPath(), 'rb');
+            $write = fopen($tmpDisk->path($tmpPath), $offset === 0 ? 'wb' : 'ab');
 
             if ($read === false || $write === false) {
                 throw new RuntimeException('Could not write upload chunk.');
