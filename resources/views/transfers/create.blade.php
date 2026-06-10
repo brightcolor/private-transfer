@@ -76,7 +76,8 @@
                 </div>
             </div>
 
-            <form data-upload-form data-chunk-size="{{ $chunkSizeMb * 1024 * 1024 }}" class="soft-panel p-5">
+            <form data-upload-form data-chunk-size="{{ $chunkSizeMb * 1024 * 1024 }}" class="soft-panel relative overflow-hidden p-5">
+                <span class="orbital-accent"></span>
                 <div class="mb-4 flex items-center justify-between">
                     <div>
                         <h2 class="text-xl font-black" data-i18n="formTitle">Neuer Transfer</h2>
@@ -129,7 +130,7 @@
                     </div>
                 </div>
 
-                <div class="progress-track mt-3">
+                <div class="progress-track mt-3 ring-1 ring-white/70 dark:ring-white/10">
                     <div data-total-bar class="progress-fill" style="width:0%"></div>
                 </div>
                 <div class="mt-2 flex items-center justify-between text-xs text-slate-500">

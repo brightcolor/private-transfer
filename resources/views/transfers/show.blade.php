@@ -24,7 +24,8 @@
             </div>
         </nav>
 
-        <section class="soft-panel mt-8 p-6 sm:p-8">
+        <section class="soft-panel relative mt-8 overflow-hidden p-6 sm:p-8">
+            <span class="orbital-accent"></span>
             <div class="hero-media mb-6 h-36">
                 <img src="{{ asset('images/transfer-hero.png') }}" alt="Abstract secure file transfer visual">
             </div>
