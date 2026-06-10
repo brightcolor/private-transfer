@@ -53,6 +53,21 @@
                 </div>
             </div>
 
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                <div class="metric-card">
+                    <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="mailStatus">Mail-Status</p>
+                    <p class="mt-1 text-sm font-black" data-i18n="{{ $transfer->notification_sent_at ? 'mailSent' : 'mailQueued' }}">
+                        {{ $transfer->notification_sent_at ? 'Versendet' : 'In Warteschlange' }}
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="downloadNotifyTitle">Download-Benachrichtigung</p>
+                    <p class="mt-1 text-sm font-black" data-i18n="{{ $transfer->notify_sender_on_download ? 'enabled' : 'disabled' }}">
+                        {{ $transfer->notify_sender_on_download ? 'Aktiv' : 'Aus' }}
+                    </p>
+                </div>
+            </div>
+
             <ul class="mt-6 divide-y divide-slate-100">
                 @foreach ($transfer->files as $file)
                     <li class="flex items-center justify-between gap-4 py-3">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendDownloadNotification;
 use App\Models\Transfer;
 use App\Models\TransferFile;
 use App\Services\TransferService;
@@ -39,6 +40,7 @@ class TransferController extends Controller
             'message' => ['nullable', 'string', 'max:2000'],
             'password' => ['nullable', 'string', 'min:8', 'max:128'],
             'max_downloads' => ['nullable', 'integer', 'min:1', 'max:1000'],
+            'notify_sender_on_download' => ['nullable', 'boolean'],
             'retention_days' => ['nullable', 'integer', 'min:1', 'max:'.config('transfer.retention_days')],
             'files' => ['required', 'array', 'min:1', 'max:50'],
             'files.*.name' => ['required', 'string', 'max:255'],
@@ -139,8 +141,9 @@ class TransferController extends Controller
         $transfer = $this->downloadableTransfer($token, $file);
 
         $transfer->increment('download_count');
+        $this->queueDownloadNotification($transfer);
 
-        if (Storage::disk(config('filesystems.default'))->getDriver()->getAdapter() instanceof \League\Flysystem\Local\LocalFilesystemAdapter) {
+        if (config('filesystems.default') === 'local') {
             return response()->download(Storage::disk(config('filesystems.default'))->path($file->storage_path), $file->original_name);
         }
 
@@ -156,6 +159,9 @@ class TransferController extends Controller
         $transfer = Transfer::with('files')->where('public_token', $token)->firstOrFail();
         abort_unless($transfer->isAvailable(), 404);
         abort_if($transfer->isPasswordProtected() && session('transfer_'.$transfer->id) !== true, 403);
+
+        $transfer->increment('download_count');
+        $this->queueDownloadNotification($transfer);
 
         return response()->streamDownload(function () use ($transfer): void {
             $zipPath = tempnam(sys_get_temp_dir(), 'transfer-zip-');
@@ -179,6 +185,19 @@ class TransferController extends Controller
                 @unlink($tmpFile);
             }
         }, 'transfer-'.$transfer->public_token.'.zip');
+    }
+
+    private function queueDownloadNotification(Transfer $transfer): void
+    {
+        $transfer->refresh();
+
+        if (
+            $transfer->notify_sender_on_download
+            && filled($transfer->sender_email)
+            && $transfer->download_notification_sent_at === null
+        ) {
+            SendDownloadNotification::dispatch($transfer->id);
+        }
     }
 
     private function downloadableTransfer(string $token, TransferFile $file): Transfer

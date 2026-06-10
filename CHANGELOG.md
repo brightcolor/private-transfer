@@ -12,6 +12,8 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Pause and resume control for active browser uploads.
 - Per-transfer retention selection capped by the configured maximum retention.
 - Polished download page metrics for file count, total size, and download count.
+- Optional sender notification after the first successful download.
+- Mail status indicators on the upload completion page.
 
 ## [0.1.0] - 2026-06-10
 

@@ -14,6 +14,8 @@ The first version was intentionally built fast with AI-assisted coding, so treat
 - Supports per-transfer retention selection up to the configured maximum.
 - Shows upload progress with speed, ETA, pause/resume, and a completion page with a copyable download link.
 - Copy-to-clipboard uses the browser Clipboard API; production deployments should use HTTPS for reliable support.
+- Can notify the sender after the first successful download when the sender email and option are set.
+- Shows queued/sent mail status on the completion page.
 - Stores only the data required to operate a transfer.
 
 ## What It Does Not Do

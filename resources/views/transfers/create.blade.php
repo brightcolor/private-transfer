@@ -126,6 +126,15 @@
                     @endforeach
                 </select>
 
+                <label class="mt-3 flex items-start gap-3 rounded-md border border-white/70 bg-white/60 p-3 text-sm shadow-sm">
+                    <input type="hidden" name="notify_sender_on_download" value="0">
+                    <input class="mt-1" type="checkbox" name="notify_sender_on_download" value="1">
+                    <span>
+                        <span class="block font-bold" data-i18n="downloadNotifyTitle">Download-Benachrichtigung</span>
+                        <span class="block text-xs text-slate-500" data-i18n="downloadNotifyCopy">Wenn eine Absender-E-Mail gesetzt ist, bekommt sie beim ersten Download eine kurze Benachrichtigung.</span>
+                    </span>
+                </label>
+
                 <div class="mt-5 grid grid-cols-3 gap-2">
                     <div class="metric-card">
                         <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricProgress">Fortschritt</p>

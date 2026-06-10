@@ -25,6 +25,8 @@ class Transfer extends Model
         'expires_at',
         'completed_at',
         'notification_sent_at',
+        'notify_sender_on_download',
+        'download_notification_sent_at',
         'max_downloads',
         'download_count',
         'status',
@@ -36,6 +38,8 @@ class Transfer extends Model
             'expires_at' => 'datetime',
             'completed_at' => 'datetime',
             'notification_sent_at' => 'datetime',
+            'notify_sender_on_download' => 'boolean',
+            'download_notification_sent_at' => 'datetime',
         ];
     }
 

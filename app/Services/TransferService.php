@@ -24,6 +24,7 @@ class TransferService
                 'message' => $data['message'] ?? null,
                 'password_hash' => filled($data['password'] ?? null) ? Hash::make($data['password']) : null,
                 'max_downloads' => $data['max_downloads'] ?? null,
+                'notify_sender_on_download' => filled($data['sender_email'] ?? null) && (bool) ($data['notify_sender_on_download'] ?? false),
                 'expires_at' => now()->addDays(min(
                     (int) ($data['retention_days'] ?? config('transfer.retention_days')),
                     (int) config('transfer.retention_days'),

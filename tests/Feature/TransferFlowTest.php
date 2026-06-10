@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Jobs\SendTransferNotification;
+use App\Jobs\SendDownloadNotification;
 use App\Models\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -94,5 +95,36 @@ class TransferFlowTest extends TestCase
 
         $this->get('/t/'.$transfer->public_token)->assertOk()->assertSee('Passwort');
         $this->post('/t/'.$transfer->public_token.'/unlock', ['password' => 'wrong-password'])->assertSessionHasErrors('password');
+    }
+
+    public function test_sender_can_request_download_notification(): void
+    {
+        Queue::fake();
+        Storage::fake('local');
+
+        $transfer = Transfer::create([
+            'public_token' => 'download-notify-token',
+            'sender_email' => 'sender@example.com',
+            'recipient_email' => 'recipient@example.com',
+            'notify_sender_on_download' => true,
+            'expires_at' => now()->addDay(),
+            'completed_at' => now(),
+            'status' => Transfer::STATUS_COMPLETED,
+        ]);
+
+        $file = $transfer->files()->create([
+            'original_name' => 'report.txt',
+            'storage_path' => 'transfers/download-notify-token/report.txt',
+            'mime_type' => 'text/plain',
+            'size' => 5,
+            'uploaded_size' => 5,
+            'upload_completed_at' => now(),
+        ]);
+
+        Storage::disk('local')->put($file->storage_path, 'hello');
+
+        $this->get('/t/'.$transfer->public_token.'/files/'.$file->id)->assertOk();
+
+        Queue::assertPushed(SendDownloadNotification::class);
     }
 }
