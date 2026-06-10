@@ -1,0 +1,15 @@
+services:
+  app:
+    image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    restart: unless-stopped
+
+  nginx:
+    restart: unless-stopped
+
+  worker:
+    image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    restart: unless-stopped
+
+  scheduler:
+    image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    restart: unless-stopped

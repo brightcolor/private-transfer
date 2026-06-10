@@ -1,0 +1,66 @@
+services:
+  app:
+    build: .
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - app-storage:/var/www/html/storage
+
+  nginx:
+    build:
+      context: .
+      target: web
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    volumes:
+      - app-storage:/var/www/html/storage
+
+  worker:
+    build: .
+    command: php artisan queue:work --sleep=1 --tries=3 --timeout=3600
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - app-storage:/var/www/html/storage
+
+  scheduler:
+    build: .
+    command: sh -c "while true; do php artisan schedule:run --no-interaction; sleep 60; done"
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - app-storage:/var/www/html/storage
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: private_transfer
+      POSTGRES_USER: private_transfer
+      POSTGRES_PASSWORD: private_transfer
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U private_transfer"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  app-storage:
+  postgres-data:
