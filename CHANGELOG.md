@@ -15,6 +15,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Optional sender notification after the first successful download.
 - Mail status indicators on the upload completion page.
 - Quickinstall script for Linux Docker hosts with `/opt/private-transfer` data directories.
+- Copy-paste curl command for installing the quickinstall script from the private GitHub repository.
 
 ### Fixed
 
