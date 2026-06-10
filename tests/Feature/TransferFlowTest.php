@@ -89,7 +89,7 @@ class TransferFlowTest extends TestCase
             'status' => Transfer::STATUS_COMPLETED,
         ]);
 
-        $this->get('/t/'.$transfer->public_token)->assertOk()->assertSee('Password');
+        $this->get('/t/'.$transfer->public_token)->assertOk()->assertSee('Passwort');
         $this->post('/t/'.$transfer->public_token.'/unlock', ['password' => 'wrong-password'])->assertSessionHasErrors('password');
     }
 }
