@@ -43,10 +43,10 @@ chmod +x quickinstall.sh
 ./quickinstall.sh
 ```
 
-For a copy-paste install from the private GitHub repository, create a fine-grained token with repository read access and run:
+For a copy-paste install from GitHub:
 
 ```bash
-export GITHUB_TOKEN=your_token_here; curl -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/brightcolor/private-transfer/contents/quickinstall.sh?ref=main" -o quickinstall.sh && chmod +x quickinstall.sh && ./quickinstall.sh
+curl -fsSL https://raw.githubusercontent.com/brightcolor/private-transfer/main/quickinstall.sh -o quickinstall.sh && chmod +x quickinstall.sh && ./quickinstall.sh
 ```
 
 The installer creates persistent bind-mount directories below `/opt/private-transfer` by default. Override them with `PRIVATE_TRANSFER_DATA_DIR`, `PRIVATE_TRANSFER_STORAGE_DIR`, or `PRIVATE_TRANSFER_POSTGRES_DIR` before running the script.
