@@ -37,8 +37,13 @@ if [ "$(id -u)" -ne 0 ]; then
     SUDO="sudo"
 fi
 
-if [ ! -f "$APP_ROOT/docker-compose.yml" ]; then
-    if [ -f "$INSTALL_DIR/docker-compose.yml" ]; then
+is_app_root() {
+    dir="$1"
+    [ -f "$dir/docker-compose.yml" ] && [ -f "$dir/.env.example" ] && [ -f "$dir/artisan" ]
+}
+
+if ! is_app_root "$APP_ROOT"; then
+    if is_app_root "$INSTALL_DIR"; then
         APP_ROOT="$INSTALL_DIR"
     else
         tmp_dir="$(mktemp -d)"

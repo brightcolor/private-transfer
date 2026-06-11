@@ -24,6 +24,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Switched Docker persistence from named volumes to host bind mounts below `/opt/private-transfer`.
 - Fixed the curl installer so it downloads the application source when launched outside a repository checkout.
 - Added a cache-busting timestamp to the documented quickinstall curl command.
+- Hardened quickinstall project detection so unrelated compose files do not skip source download.
 
 ## [0.1.0] - 2026-06-10
 
