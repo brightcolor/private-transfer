@@ -5,7 +5,7 @@ APP_ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 DATA_DIR="${PRIVATE_TRANSFER_DATA_DIR:-/opt/private-transfer}"
 STORAGE_DIR="${PRIVATE_TRANSFER_STORAGE_DIR:-$DATA_DIR/storage}"
 POSTGRES_DIR="${PRIVATE_TRANSFER_POSTGRES_DIR:-$DATA_DIR/postgres}"
-APP_URL="${APP_URL:-http://localhost:8080}"
+APP_URL="${APP_URL:-}"
 
 if ! command -v docker >/dev/null 2>&1; then
     echo "Docker is required but was not found in PATH." >&2
@@ -38,8 +38,99 @@ $SUDO mkdir -p \
 $SUDO chmod -R u+rwX,g+rwX "$DATA_DIR"
 $SUDO chown -R 82:82 "$STORAGE_DIR"
 
+ENV_CREATED=false
+
 if [ ! -f "$APP_ROOT/.env" ]; then
     cp "$APP_ROOT/.env.example" "$APP_ROOT/.env"
+    ENV_CREATED=true
+fi
+
+get_env() {
+    key="$1"
+    file="$APP_ROOT/.env"
+    line="$(grep -E "^$key=" "$file" | tail -n 1 || true)"
+
+    if [ -z "$line" ]; then
+        return 1
+    fi
+
+    printf '%s\n' "${line#*=}"
+}
+
+port_is_used() {
+    port="$1"
+
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltn | awk '{print $4}' | grep -Eq "[:.]$port$"
+        return $?
+    fi
+
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -iTCP:"$port" -sTCP:LISTEN -Pn >/dev/null 2>&1
+        return $?
+    fi
+
+    if command -v netstat >/dev/null 2>&1; then
+        netstat -ltn | awk '{print $4}' | grep -Eq "[:.]$port$"
+        return $?
+    fi
+
+    return 1
+}
+
+random_port() {
+    echo $((20000 + ($(date +%s) % 40000)))
+}
+
+find_free_port() {
+    candidate="$(random_port)"
+    tries=0
+
+    while [ "$tries" -lt 200 ]; do
+        if [ "$candidate" -gt 60999 ]; then
+            candidate=20000
+        fi
+
+        if ! port_is_used "$candidate"; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+
+        candidate=$((candidate + 1))
+        tries=$((tries + 1))
+    done
+
+    echo "Could not find a free HTTP port." >&2
+    exit 1
+}
+
+HTTP_PORT_SOURCE="default"
+HTTP_PORT="${PRIVATE_TRANSFER_HTTP_PORT:-}"
+
+if [ -n "$HTTP_PORT" ]; then
+    HTTP_PORT_SOURCE="env"
+else
+    HTTP_PORT="$(get_env PRIVATE_TRANSFER_HTTP_PORT || true)"
+
+    if [ -n "$HTTP_PORT" ] && [ "$ENV_CREATED" = "false" ]; then
+        HTTP_PORT_SOURCE="file"
+    else
+        HTTP_PORT=8080
+    fi
+fi
+
+if [ "$HTTP_PORT_SOURCE" = "default" ] && port_is_used "$HTTP_PORT"; then
+    echo "Port $HTTP_PORT is already in use; selecting a free random port."
+    HTTP_PORT="$(find_free_port)"
+fi
+
+if [ "$HTTP_PORT_SOURCE" = "env" ] && port_is_used "$HTTP_PORT"; then
+    echo "Configured HTTP port $HTTP_PORT is already in use." >&2
+    exit 1
+fi
+
+if [ -z "$APP_URL" ]; then
+    APP_URL="http://localhost:$HTTP_PORT"
 fi
 
 set_env() {
@@ -55,6 +146,7 @@ set_env() {
 }
 
 set_env APP_URL "$APP_URL"
+set_env PRIVATE_TRANSFER_HTTP_PORT "$HTTP_PORT"
 set_env DB_CONNECTION pgsql
 set_env DB_HOST postgres
 set_env DB_PORT 5432
@@ -69,6 +161,7 @@ rm -f "$APP_ROOT/.env.bak"
 
 export PRIVATE_TRANSFER_STORAGE_DIR="$STORAGE_DIR"
 export PRIVATE_TRANSFER_POSTGRES_DIR="$POSTGRES_DIR"
+export PRIVATE_TRANSFER_HTTP_PORT="$HTTP_PORT"
 
 cd "$APP_ROOT"
 

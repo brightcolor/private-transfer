@@ -50,6 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/brightcolor/private-transfer/main/q
 ```
 
 The installer creates persistent bind-mount directories below `/opt/private-transfer` by default. Override them with `PRIVATE_TRANSFER_DATA_DIR`, `PRIVATE_TRANSFER_STORAGE_DIR`, or `PRIVATE_TRANSFER_POSTGRES_DIR` before running the script.
+It uses HTTP port `8080` by default. If that port is already in use during a first-time install, the script selects a free random high port and writes it to `.env` as `PRIVATE_TRANSFER_HTTP_PORT`.
 
 Manual Docker start:
 
@@ -64,6 +65,7 @@ Open `http://localhost:8080`.
 
 Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler services.
 The PHP services build the `app` Docker stage, while the HTTP service builds the separate `web` Nginx stage.
+The host HTTP port is controlled by `PRIVATE_TRANSFER_HTTP_PORT`, defaulting to `8080`.
 Persistent Docker data is stored through host bind mounts, defaulting to `/opt/private-transfer/storage` and `/opt/private-transfer/postgres`.
 
 ## Required ENV Values

@@ -16,6 +16,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Mail status indicators on the upload completion page.
 - Quickinstall script for Linux Docker hosts with `/opt/private-transfer` data directories.
 - Copy-paste curl command for installing the quickinstall script from the public GitHub repository.
+- Automatic free random HTTP port selection in quickinstall when default port `8080` is already in use.
 
 ### Fixed
 

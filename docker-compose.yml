@@ -19,7 +19,7 @@ services:
     depends_on:
       - app
     ports:
-      - "8080:80"
+      - "${PRIVATE_TRANSFER_HTTP_PORT:-8080}:80"
     volumes:
       - type: bind
         source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
