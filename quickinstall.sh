@@ -3,6 +3,7 @@ set -eu
 
 APP_ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 DATA_DIR="${PRIVATE_TRANSFER_DATA_DIR:-/opt/private-transfer}"
+INSTALL_DIR="${PRIVATE_TRANSFER_INSTALL_DIR:-$DATA_DIR/app}"
 STORAGE_DIR="${PRIVATE_TRANSFER_STORAGE_DIR:-$DATA_DIR/storage}"
 POSTGRES_DIR="${PRIVATE_TRANSFER_POSTGRES_DIR:-$DATA_DIR/postgres}"
 APP_URL="${APP_URL:-}"
@@ -17,6 +18,16 @@ if ! docker compose version >/dev/null 2>&1; then
     exit 1
 fi
 
+if ! command -v curl >/dev/null 2>&1; then
+    echo "curl is required but was not found in PATH." >&2
+    exit 1
+fi
+
+if ! command -v tar >/dev/null 2>&1; then
+    echo "tar is required but was not found in PATH." >&2
+    exit 1
+fi
+
 SUDO=""
 if [ "$(id -u)" -ne 0 ]; then
     if ! command -v sudo >/dev/null 2>&1; then
@@ -26,8 +37,24 @@ if [ "$(id -u)" -ne 0 ]; then
     SUDO="sudo"
 fi
 
+if [ ! -f "$APP_ROOT/docker-compose.yml" ]; then
+    if [ -f "$INSTALL_DIR/docker-compose.yml" ]; then
+        APP_ROOT="$INSTALL_DIR"
+    else
+        tmp_dir="$(mktemp -d)"
+        echo "Downloading Private Transfer into $INSTALL_DIR"
+        $SUDO mkdir -p "$INSTALL_DIR"
+        curl -fsSL https://github.com/brightcolor/private-transfer/archive/refs/heads/main.tar.gz \
+            | tar -xz -C "$tmp_dir" --strip-components=1
+        $SUDO cp -R "$tmp_dir/." "$INSTALL_DIR/"
+        rm -rf "$tmp_dir"
+        APP_ROOT="$INSTALL_DIR"
+    fi
+fi
+
 echo "Creating host directories in $DATA_DIR"
 $SUDO mkdir -p \
+    "$INSTALL_DIR" \
     "$STORAGE_DIR/app" \
     "$STORAGE_DIR/framework/cache" \
     "$STORAGE_DIR/framework/sessions" \
@@ -36,6 +63,11 @@ $SUDO mkdir -p \
     "$POSTGRES_DIR"
 
 $SUDO chmod -R u+rwX,g+rwX "$DATA_DIR"
+
+if [ "$(id -u)" -ne 0 ]; then
+    $SUDO chown -R "$(id -u):$(id -g)" "$INSTALL_DIR"
+fi
+
 $SUDO chown -R 82:82 "$STORAGE_DIR"
 
 ENV_CREATED=false

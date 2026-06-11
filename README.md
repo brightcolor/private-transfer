@@ -50,6 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/brightcolor/private-transfer/main/q
 ```
 
 The installer creates persistent bind-mount directories below `/opt/private-transfer` by default. Override them with `PRIVATE_TRANSFER_DATA_DIR`, `PRIVATE_TRANSFER_STORAGE_DIR`, or `PRIVATE_TRANSFER_POSTGRES_DIR` before running the script.
+When launched through the curl command, it downloads the application source into `/opt/private-transfer/app`. Override that location with `PRIVATE_TRANSFER_INSTALL_DIR`.
 It uses HTTP port `8080` by default. If that port is already in use during a first-time install, the script selects a free random high port and writes it to `.env` as `PRIVATE_TRANSFER_HTTP_PORT`.
 
 Manual Docker start:
