@@ -1,15 +1,20 @@
 services:
   app:
+    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
     restart: unless-stopped
 
   nginx:
+    build: null
+    image: ghcr.io/brightcolor/private-transfer-web:${APP_VERSION:-latest}
     restart: unless-stopped
 
   worker:
+    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
     restart: unless-stopped
 
   scheduler:
+    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
     restart: unless-stopped

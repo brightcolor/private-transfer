@@ -65,7 +65,7 @@ docker compose exec app php artisan migrate --force
 Open `http://localhost:8080`.
 
 Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler services.
-The PHP services build the `app` Docker stage, while the HTTP service builds the separate `web` Nginx stage.
+The quick installer pulls prebuilt GHCR images. Local Docker builds are only needed for development.
 The host HTTP port is controlled by `PRIVATE_TRANSFER_HTTP_PORT`, defaulting to `8080`.
 Persistent Docker data is stored through host bind mounts, defaulting to `/opt/private-transfer/storage` and `/opt/private-transfer/postgres`.
 
@@ -102,7 +102,7 @@ Health endpoints:
 
 ## CI And Releases
 
-`ci.yml` installs Composer and npm dependencies, builds assets, runs tests, runs PHP linting, and builds the Docker image. `docker.yml` builds on `main` and pushes GHCR images for SemVer tags such as `v0.1.0`.
+`ci.yml` installs Composer and npm dependencies, builds assets, runs tests, runs PHP linting, and builds the Docker image. `docker.yml` builds app and Nginx images on `main`, publishes `latest`, and also publishes SemVer tags such as `v0.1.0`.
 
 Semantic Versioning is used:
 

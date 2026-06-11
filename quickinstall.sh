@@ -202,15 +202,19 @@ export PRIVATE_TRANSFER_HTTP_PORT="$HTTP_PORT"
 
 cd "$APP_ROOT"
 
-docker compose build
-docker compose up -d postgres redis
-docker compose up -d
+dc() {
+    docker compose -f "$APP_ROOT/docker-compose.yml" -f "$APP_ROOT/docker-compose.prod.yml" "$@"
+}
+
+dc pull
+dc up -d postgres redis
+dc up -d
 
 if ! grep -Eq '^APP_KEY=base64:.+' "$APP_ROOT/.env"; then
-    docker compose exec -T app php artisan key:generate --force
+    dc exec -T app php artisan key:generate --force
 fi
 
-docker compose exec -T app php artisan migrate --force
-docker compose exec -T app php artisan optimize:clear
+dc exec -T app php artisan migrate --force
+dc exec -T app php artisan optimize:clear
 
 echo "Private Transfer is running at $APP_URL"

@@ -17,6 +17,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Quickinstall script for Linux Docker hosts with `/opt/private-transfer` data directories.
 - Copy-paste curl command for installing the quickinstall script from the public GitHub repository.
 - Automatic free random HTTP port selection in quickinstall when default port `8080` is already in use.
+- GHCR publishing for separate app and Nginx images on `main`.
 
 ### Fixed
 
@@ -25,6 +26,8 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Fixed the curl installer so it downloads the application source when launched outside a repository checkout.
 - Added a cache-busting timestamp to the documented quickinstall curl command.
 - Hardened quickinstall project detection so unrelated compose files do not skip source download.
+- Changed quickinstall to pull prebuilt GHCR images instead of building locally.
+- Fixed Docker vendor installation by making `artisan` available during Composer scripts.
 
 ## [0.1.0] - 2026-06-10
 
