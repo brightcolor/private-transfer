@@ -15,9 +15,11 @@ FROM php:8.3-fpm-alpine AS app
 WORKDIR /var/www/html
 
 RUN apk add --no-cache bash icu-dev libzip-dev postgresql-dev \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-ext-install intl pcntl pdo_pgsql zip \
     && pecl install redis \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable redis \
+    && apk del .build-deps
 
 COPY --chown=www-data:www-data . .
 COPY --from=vendor --chown=www-data:www-data /app/vendor vendor

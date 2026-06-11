@@ -28,6 +28,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Hardened quickinstall project detection so unrelated compose files do not skip source download.
 - Changed quickinstall to pull prebuilt GHCR images instead of building locally.
 - Fixed Docker vendor installation by making `artisan` available during Composer scripts.
+- Fixed PHP Redis extension builds by keeping PHP build dependencies available until PECL finishes.
 
 ## [0.1.0] - 2026-06-10
 
