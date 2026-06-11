@@ -46,7 +46,7 @@ chmod +x quickinstall.sh
 For a copy-paste install from GitHub:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/brightcolor/private-transfer/main/quickinstall.sh -o quickinstall.sh && chmod +x quickinstall.sh && ./quickinstall.sh
+curl -fsSL "https://raw.githubusercontent.com/brightcolor/private-transfer/main/quickinstall.sh?$(date +%s)" -o quickinstall.sh && chmod +x quickinstall.sh && ./quickinstall.sh
 ```
 
 The installer creates persistent bind-mount directories below `/opt/private-transfer` by default. Override them with `PRIVATE_TRANSFER_DATA_DIR`, `PRIVATE_TRANSFER_STORAGE_DIR`, or `PRIVATE_TRANSFER_POSTGRES_DIR` before running the script.

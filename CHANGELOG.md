@@ -23,6 +23,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Corrected Docker build targets so PHP services and the GHCR image build the app stage instead of the Nginx stage.
 - Switched Docker persistence from named volumes to host bind mounts below `/opt/private-transfer`.
 - Fixed the curl installer so it downloads the application source when launched outside a repository checkout.
+- Added a cache-busting timestamp to the documented quickinstall curl command.
 
 ## [0.1.0] - 2026-06-10
 
