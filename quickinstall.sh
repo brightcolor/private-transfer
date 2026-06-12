@@ -186,6 +186,17 @@ set_env() {
     fi
 }
 
+generate_app_key() {
+    random="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | base64 | tr -d '\n')"
+    printf 'base64:%s\n' "$random"
+}
+
+APP_KEY_VALUE="$(get_env APP_KEY || true)"
+
+if ! printf '%s' "$APP_KEY_VALUE" | grep -Eq '^base64:.+'; then
+    set_env APP_KEY "$(generate_app_key)"
+fi
+
 set_env APP_URL "$APP_URL"
 set_env PRIVATE_TRANSFER_HTTP_PORT "$HTTP_PORT"
 set_env DB_CONNECTION pgsql
@@ -212,11 +223,38 @@ dc() {
 
 dc pull
 dc up -d postgres redis
-dc up -d
 
-if ! grep -Eq '^APP_KEY=base64:.+' "$APP_ROOT/.env"; then
-    dc exec -T app php artisan key:generate --force
-fi
+echo "Waiting for PostgreSQL to be ready."
+tries=0
+
+until dc exec -T postgres pg_isready -U private_transfer >/dev/null 2>&1; do
+    tries=$((tries + 1))
+
+    if [ "$tries" -gt 30 ]; then
+        echo "PostgreSQL did not become ready in time." >&2
+        dc ps
+        exit 1
+    fi
+
+    sleep 2
+done
+
+dc up -d --force-recreate app worker scheduler nginx
+
+echo "Waiting for the application container to be ready."
+tries=0
+
+until dc exec -T app php artisan --version >/dev/null 2>&1; do
+    tries=$((tries + 1))
+
+    if [ "$tries" -gt 30 ]; then
+        echo "The application container did not become ready in time." >&2
+        dc ps
+        exit 1
+    fi
+
+    sleep 2
+done
 
 dc exec -T app php artisan migrate --force
 dc exec -T app php artisan optimize:clear

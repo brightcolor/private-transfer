@@ -30,6 +30,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Fixed Docker vendor installation by making `artisan` available during Composer scripts.
 - Fixed PHP Redis extension builds by keeping PHP build dependencies available until PECL finishes.
 - Made the production Compose file standalone so quickinstall cannot inherit local build definitions.
+- Fixed image-based installs by generating `APP_KEY` in the host `.env` instead of running `artisan key:generate`.
 
 ## [0.1.0] - 2026-06-10
 
