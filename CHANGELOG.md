@@ -32,6 +32,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Made the production Compose file standalone so quickinstall cannot inherit local build definitions.
 - Fixed image-based installs by generating `APP_KEY` in the host `.env` instead of running `artisan key:generate`.
 - Improved PostgreSQL startup handling in quickinstall with a longer wait, log output on timeout, and explicit root entrypoint startup for bind mounts.
+- Pinned Docker PostgreSQL to `postgres:17-alpine` to avoid PostgreSQL 18 data-directory layout issues with `/var/lib/postgresql/data` bind mounts.
 
 ## [0.1.0] - 2026-06-10
 

@@ -27,7 +27,7 @@ The first version was intentionally built fast with AI-assisted coding, so treat
 ## Architecture
 
 - Laravel 13, PHP 8.3+, Blade, Tailwind CSS, and minimal vanilla JavaScript.
-- PostgreSQL for production, SQLite can be used locally.
+- PostgreSQL 17 for Docker production, SQLite can be used locally.
 - Redis-backed queues and cache.
 - SMTP through Laravel Mail.
 - Local private storage for development and S3-compatible storage for production.
@@ -68,6 +68,7 @@ Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler s
 The quick installer uses `docker-compose.prod.yml` and pulls prebuilt GHCR images. Local Docker builds are only needed for development.
 The host HTTP port is controlled by `PRIVATE_TRANSFER_HTTP_PORT`, defaulting to `8080`.
 Persistent Docker data is stored through host bind mounts, defaulting to `/opt/private-transfer/storage` and `/opt/private-transfer/postgres`.
+PostgreSQL is pinned to `postgres:17-alpine` to keep the standard `/var/lib/postgresql/data` bind-mount layout stable.
 
 ## Required ENV Values
 

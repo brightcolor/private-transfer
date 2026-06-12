@@ -50,8 +50,7 @@ services:
         target: /var/www/html/storage
 
   postgres:
-    image: postgres:18-alpine
-    user: "0:0"
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: private_transfer
       POSTGRES_USER: private_transfer

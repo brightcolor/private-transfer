@@ -80,6 +80,15 @@ fi
 $SUDO chown -R 82:82 "$STORAGE_DIR"
 $SUDO chmod -R 700 "$POSTGRES_DIR"
 
+if [ ! -f "$POSTGRES_DIR/PG_VERSION" ] && [ -n "$(find "$POSTGRES_DIR" -mindepth 1 -maxdepth 1 -print -quit)" ]; then
+    backup_dir="$DATA_DIR/postgres.invalid.$(date +%Y%m%d%H%M%S)"
+    echo "Moving incomplete PostgreSQL data directory to $backup_dir"
+    $SUDO mv "$POSTGRES_DIR" "$backup_dir"
+    $SUDO mkdir -p "$POSTGRES_DIR"
+fi
+
+$SUDO chmod -R 700 "$POSTGRES_DIR"
+
 ENV_CREATED=false
 
 if [ ! -f "$APP_ROOT/.env" ]; then
