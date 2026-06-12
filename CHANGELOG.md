@@ -18,6 +18,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Copy-paste curl command for installing the quickinstall script from the public GitHub repository.
 - Automatic free random HTTP port selection in quickinstall when default port `8080` is already in use.
 - GHCR publishing for separate app and Nginx images on `main`.
+- Circular upload progress animation with stable one-line speed, ETA, and uploaded-size metrics.
 
 ### Fixed
 
@@ -33,6 +34,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Fixed image-based installs by generating `APP_KEY` in the host `.env` instead of running `artisan key:generate`.
 - Improved PostgreSQL startup handling in quickinstall with a longer wait, log output on timeout, and explicit root entrypoint startup for bind mounts.
 - Pinned Docker PostgreSQL to `postgres:17-alpine` to avoid PostgreSQL 18 data-directory layout issues with `/var/lib/postgresql/data` bind mounts.
+- Improved dark mode contrast for upload, transfer summary, file rows, badges, notices, and secondary actions.
 
 ## [0.1.0] - 2026-06-10
 

@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './animations.css';
+@import './upload-ui.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -85,7 +86,7 @@
     }
 
     .dark .soft-panel {
-        @apply border-white/10 bg-slate-900/80 shadow-teal-950/30;
+        @apply border-white/10 bg-slate-900/85 shadow-black/40;
     }
 
     .feature-card {
@@ -102,14 +103,6 @@
 
     .dark .field {
         @apply border-white/10 bg-slate-950/70 text-slate-50 placeholder:text-slate-500 focus:border-teal-400 focus:ring-teal-400/15;
-    }
-
-    .dark .bg-white {
-        background-color: rgba(15, 23, 42, 0.86);
-    }
-
-    .dark .bg-slate-100 {
-        background-color: rgb(30 41 59);
     }
 
     .dropzone {
@@ -223,7 +216,7 @@
     }
 
     .dark .metric-card {
-        @apply border-white/10 bg-white/10;
+        @apply border-white/10 bg-slate-950/45 shadow-black/20;
     }
 
     .metric-card::before {
@@ -293,44 +286,5 @@
     .dark .premium-divider {
         @apply via-white/15;
     }
-}
 
-.dark .text-slate-950,
-.dark .text-slate-900 {
-    color: rgb(248 250 252) !important;
-}
-
-.dark .text-slate-700,
-.dark .text-slate-600 {
-    color: rgb(203 213 225) !important;
-}
-
-.dark .text-slate-500,
-.dark .text-slate-400 {
-    color: rgb(148 163 184) !important;
-}
-
-.dark .text-teal-700 {
-    color: rgb(94 234 212) !important;
-}
-
-.dark .text-rose-700,
-.dark .text-rose-600 {
-    color: rgb(251 113 133) !important;
-}
-
-.dark .text-indigo-600 {
-    color: rgb(165 180 252) !important;
-}
-
-.dark .bg-teal-100 {
-    background-color: rgba(20, 184, 166, 0.18) !important;
-}
-
-.dark .bg-red-50 {
-    background-color: rgba(127, 29, 29, 0.35) !important;
-}
-
-.dark .border-red-200 {
-    border-color: rgba(248, 113, 113, 0.35) !important;
 }

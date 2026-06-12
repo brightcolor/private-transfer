@@ -35,7 +35,7 @@
                     <h1 class="text-4xl font-black" data-i18n="downloadTitle">Download</h1>
                     <p class="mt-2 text-sm text-slate-600"><span data-i18n="availableUntil">Verfuegbar bis</span> {{ $transfer->expires_at->toDayDateTimeString() }}.</p>
                 </div>
-                <span class="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">{{ $transfer->status }}</span>
+                <span class="pill-success">{{ $transfer->status }}</span>
             </div>
 
             <div class="mt-5 grid gap-3 sm:grid-cols-3">
@@ -54,7 +54,7 @@
             </div>
 
             @if (! $transfer->isAvailable())
-                <p class="mt-6 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800" data-i18n="notAvailable">Dieser Transfer ist nicht mehr verfuegbar.</p>
+                <p class="notice-danger mt-6" data-i18n="notAvailable">Dieser Transfer ist nicht mehr verfuegbar.</p>
             @elseif ($locked)
                 <form method="post" action="{{ route('transfers.unlock', $transfer->public_token) }}" class="mt-6">
                     @csrf
@@ -65,20 +65,20 @@
                 </form>
             @else
                 @if ($transfer->message)
-                    <blockquote class="mt-6 rounded-md border border-teal-100 bg-teal-50/70 p-4 text-sm text-slate-700">{{ $transfer->message }}</blockquote>
+                    <blockquote class="notice-info mt-6">{{ $transfer->message }}</blockquote>
                 @endif
 
                 <ul class="mt-6 space-y-3">
                     @foreach ($transfer->files as $file)
-                        <li class="flex items-center justify-between gap-4 rounded-md border border-white/70 bg-white/75 p-3 shadow-sm">
+                        <li class="file-row">
                             <div class="flex min-w-0 items-center gap-3">
-                                <span class="grid size-10 shrink-0 place-items-center rounded-md bg-gradient-to-br from-teal-100 to-rose-100 text-xs font-black text-slate-700">FILE</span>
+                                <span class="file-badge">FILE</span>
                                 <div class="min-w-0">
                                 <p class="truncate font-bold">{{ $file->original_name }}</p>
                                 <p class="text-sm text-slate-500">{{ \Illuminate\Support\Number::fileSize($file->size) }}</p>
                                 </div>
                             </div>
-                            <a class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md" href="{{ route('transfers.files.download', [$transfer->public_token, $file]) }}" data-i18n="downloadFile">Download</a>
+                            <a class="secondary-button" href="{{ route('transfers.files.download', [$transfer->public_token, $file]) }}" data-i18n="downloadFile">Download</a>
                         </li>
                     @endforeach
                 </ul>

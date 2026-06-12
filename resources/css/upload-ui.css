@@ -1,0 +1,159 @@
+@layer components {
+    .upload-orbit {
+        --upload-progress: 0%;
+        @apply relative mx-auto grid size-36 place-items-center rounded-full;
+        background:
+            conic-gradient(from 0deg, rgb(45 212 191) 0 var(--upload-progress), rgba(15, 23, 42, 0.08) var(--upload-progress) 100%);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.75), 0 18px 50px rgba(15, 23, 42, 0.12);
+    }
+
+    .dark .upload-orbit {
+        background:
+            conic-gradient(from 0deg, rgb(45 212 191) 0 var(--upload-progress), rgba(255, 255, 255, 0.10) var(--upload-progress) 100%);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10), 0 18px 55px rgba(0, 0, 0, 0.35);
+    }
+
+    .upload-orbit::before {
+        content: '';
+        @apply absolute inset-2 rounded-full bg-white/90 backdrop-blur;
+    }
+
+    .dark .upload-orbit::before {
+        @apply bg-slate-950/90;
+    }
+
+    .upload-orbit::after {
+        content: '';
+        @apply absolute inset-0 rounded-full;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+        mask: radial-gradient(circle, transparent 58%, black 61%);
+        opacity: 0;
+    }
+
+    .upload-orbit.is-uploading::after {
+        animation: orbit-sweep 1.25s linear infinite;
+        opacity: 1;
+    }
+
+    .upload-orbit-inner {
+        @apply relative z-10 text-center;
+    }
+
+    .stable-metric {
+        @apply whitespace-nowrap tabular-nums;
+    }
+
+    .surface-card {
+        @apply rounded-lg border border-white/70 bg-white/75 shadow-sm;
+    }
+
+    .dark .surface-card {
+        @apply border-white/10 bg-slate-950/45 shadow-black/20;
+    }
+
+    .file-row {
+        @apply flex items-center justify-between gap-4 rounded-md border border-white/70 bg-white/75 p-3 shadow-sm transition;
+    }
+
+    .dark .file-row {
+        @apply border-white/10 bg-slate-950/50 shadow-black/20;
+    }
+
+    .file-badge {
+        @apply grid size-10 shrink-0 place-items-center rounded-md bg-gradient-to-br from-teal-100 to-rose-100 text-xs font-black text-slate-700;
+    }
+
+    .dark .file-badge {
+        @apply from-teal-400/20 to-rose-400/20 text-slate-100 ring-1 ring-white/10;
+    }
+
+    .pill-success {
+        @apply inline-flex rounded-full border border-teal-200 bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800 shadow-sm;
+    }
+
+    .dark .pill-success {
+        @apply border-teal-300/25 bg-teal-400/15 text-teal-100 shadow-none;
+    }
+
+    .notice-info {
+        @apply rounded-md border border-teal-100 bg-teal-50/70 p-4 text-sm text-slate-700;
+    }
+
+    .dark .notice-info {
+        @apply border-teal-300/20 bg-teal-400/10 text-slate-200;
+    }
+
+    .notice-warning {
+        @apply rounded-md border border-amber-200 bg-amber-50/90 p-4 text-sm text-amber-950 shadow-sm;
+    }
+
+    .dark .notice-warning {
+        @apply border-amber-300/25 bg-amber-400/10 text-amber-100 shadow-black/20;
+    }
+
+    .notice-danger {
+        @apply rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800;
+    }
+
+    .dark .notice-danger {
+        @apply border-red-300/25 bg-red-500/10 text-red-100;
+    }
+
+    .secondary-button {
+        @apply inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-300 hover:text-slate-950 hover:shadow-md;
+    }
+
+    .dark .secondary-button {
+        @apply border-white/10 bg-slate-950/55 text-slate-100 hover:border-teal-300/40 hover:bg-slate-900 hover:text-white hover:shadow-black/25;
+    }
+
+    .soft-check {
+        @apply mt-3 flex items-start gap-3 rounded-md border border-white/70 bg-white/60 p-3 text-sm shadow-sm;
+    }
+
+    .dark .soft-check {
+        @apply border-white/10 bg-slate-950/45 text-slate-200 shadow-black/20;
+    }
+
+    .completion-list {
+        @apply mt-6 divide-y divide-slate-100;
+    }
+
+    .dark .completion-list {
+        @apply divide-white/10;
+    }
+}
+
+@keyframes orbit-sweep {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dark .text-slate-950,
+.dark .text-slate-900 {
+    color: rgb(248 250 252);
+}
+
+.dark .text-slate-700,
+.dark .text-slate-600 {
+    color: rgb(203 213 225);
+}
+
+.dark .text-slate-500,
+.dark .text-slate-400 {
+    color: rgb(148 163 184);
+}
+
+.dark .text-teal-700 {
+    color: rgb(94 234 212);
+}
+
+.dark .text-rose-700,
+.dark .text-rose-600 {
+    color: rgb(251 113 133);
+}
+
+.dark .text-indigo-600 {
+    color: rgb(165 180 252);
+}

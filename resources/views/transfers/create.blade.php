@@ -35,7 +35,7 @@
 
         <section class="grid w-full items-start gap-6 py-6 lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[1fr_27rem] lg:items-center lg:gap-8 lg:py-8">
             <div class="max-w-3xl">
-                <div class="inline-flex rounded-full border border-teal-200 bg-white/70 px-3 py-1 text-xs font-bold uppercase tracking-wide text-teal-800 shadow-sm" data-i18n="eyebrow">
+                <div class="pill-success uppercase tracking-wide" data-i18n="eyebrow">
                     Datenschutzfreundlicher Transfer-Workspace
                 </div>
                 <h1 class="hero-gradient mt-4 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl" data-i18n="heroTitle">Dateien einfach und privat versenden.</h1>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <div data-resume-panel class="mt-5 hidden rounded-md border border-amber-200 bg-amber-50/90 p-4 text-sm text-amber-950 shadow-sm" data-i18n="resumePanel">
+                <div data-resume-panel class="notice-warning mt-5 hidden" data-i18n="resumePanel">
                     Ein vorheriger Upload wurde gefunden. Waehle dieselben Dateien erneut aus und starte die Session, um ab dem Server-Fortschritt fortzufahren.
                 </div>
             </div>
@@ -83,7 +83,7 @@
                         <h2 class="text-xl font-black" data-i18n="formTitle">Neuer Transfer</h2>
                         <p class="text-sm text-slate-500" data-i18n="formSubtitle">Keine Accounts. Keine oeffentlichen Datei-URLs.</p>
                     </div>
-                    <span class="rounded-full border border-teal-200 bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800 shadow-sm" data-i18n="ready">Bereit</span>
+                    <span class="pill-success" data-i18n="ready">Bereit</span>
                 </div>
 
                 <div class="premium-divider my-4"></div>
@@ -126,7 +126,7 @@
                     @endforeach
                 </select>
 
-                <label class="mt-3 flex items-start gap-3 rounded-md border border-white/70 bg-white/60 p-3 text-sm shadow-sm">
+                <label class="soft-check">
                     <input type="hidden" name="notify_sender_on_download" value="0">
                     <input class="mt-1" type="checkbox" name="notify_sender_on_download" value="1">
                     <span>
@@ -135,27 +135,36 @@
                     </span>
                 </label>
 
+                <div class="mt-5">
+                    <div data-upload-orbit class="upload-orbit">
+                        <div class="upload-orbit-inner">
+                            <p data-total-text class="stable-metric text-3xl font-black text-slate-950">0%</p>
+                            <p class="mt-1 text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricProgress">Fortschritt</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-5 grid grid-cols-3 gap-2">
                     <div class="metric-card">
                         <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricProgress">Fortschritt</p>
-                        <p data-total-text class="metric-value text-slate-900">0%</p>
+                        <p class="metric-value stable-metric text-slate-900" data-i18n="uploadLabel">Upload</p>
                     </div>
                     <div class="metric-card">
                         <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricSpeed">Speed</p>
-                        <p data-speed-text class="metric-value text-teal-700" data-i18n="idle">Wartet</p>
+                        <p data-speed-text class="metric-value stable-metric text-teal-700" data-i18n="idle">Wartet</p>
                     </div>
                     <div class="metric-card">
                         <p class="text-[0.65rem] font-bold uppercase tracking-wide text-slate-400" data-i18n="metricEta">Restzeit</p>
-                        <p data-eta-text class="metric-value text-rose-700">--</p>
+                        <p data-eta-text class="metric-value stable-metric text-rose-700">--</p>
                     </div>
                 </div>
 
                 <div class="progress-track mt-3 ring-1 ring-white/70 dark:ring-white/10">
                     <div data-total-bar class="progress-fill" style="width:0%"></div>
                 </div>
-                <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+                <div class="mt-2 flex items-center justify-between gap-3 text-xs text-slate-500">
                     <span data-status data-i18n="readyStatus">Bereit.</span>
-                    <span data-uploaded-text data-i18n="uploadedIdle">0 B hochgeladen</span>
+                    <span data-uploaded-text class="stable-metric shrink-0 text-right" data-i18n="uploadedIdle">0 B hochgeladen</span>
                 </div>
 
                 <div class="mt-5 grid gap-2 sm:grid-cols-[1fr_auto]">

@@ -26,11 +26,11 @@
 
         <section class="soft-panel relative mt-8 overflow-hidden p-6 sm:p-8">
             <span class="orbital-accent"></span>
-            <p class="inline-flex rounded-full border border-teal-200 bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800" data-i18n="sentBadge">Transfer bereit</p>
-            <h1 class="hero-gradient mt-4 text-4xl font-black" data-i18n="sentTitle">Upload abgeschlossen.</h1>
+            <p class="pill-success" data-i18n="sentBadge">Transfer bereit</p>
+            <h1 class="mt-4 text-4xl font-black" data-i18n="sentTitle">Upload abgeschlossen.</h1>
             <p class="mt-3 max-w-2xl text-sm text-slate-600" data-i18n="sentCopy">Die E-Mail wird automatisch versendet. Du kannst den Download-Link auch direkt kopieren.</p>
 
-            <div class="mt-6 rounded-lg border border-white/70 bg-white/75 p-4 shadow-sm">
+            <div class="surface-card mt-6 p-4">
                 <label class="block text-xs font-bold uppercase tracking-wide text-slate-400" for="download_link" data-i18n="downloadLink">Download-Link</label>
                 <div class="mt-2 flex flex-col gap-2 sm:flex-row">
                     <input id="download_link" class="field mt-0" readonly value="{{ route('transfers.show', $transfer->public_token) }}">
@@ -68,14 +68,14 @@
                 </div>
             </div>
 
-            <ul class="mt-6 divide-y divide-slate-100">
+            <ul class="completion-list">
                 @foreach ($transfer->files as $file)
                     <li class="flex items-center justify-between gap-4 py-3">
                         <div class="min-w-0">
                             <p class="truncate font-bold">{{ $file->original_name }}</p>
                             <p class="text-sm text-slate-500">{{ \Illuminate\Support\Number::fileSize($file->size) }}</p>
                         </div>
-                        <span class="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800" data-i18n="complete">Fertig</span>
+                        <span class="pill-success" data-i18n="complete">Fertig</span>
                     </li>
                 @endforeach
             </ul>

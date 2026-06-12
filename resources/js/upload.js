@@ -10,6 +10,7 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
     const list = uploadForm.querySelector('[data-file-list]');
     const totalBar = uploadForm.querySelector('[data-total-bar]');
     const totalText = uploadForm.querySelector('[data-total-text]');
+    const uploadOrbit = uploadForm.querySelector('[data-upload-orbit]');
     const uploadedText = uploadForm.querySelector('[data-uploaded-text]');
     const speedText = uploadForm.querySelector('[data-speed-text]');
     const etaText = uploadForm.querySelector('[data-eta-text]');
@@ -62,19 +63,19 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
         list.innerHTML = '';
         selectedFiles.forEach((file, index) => {
             const row = document.createElement('li');
-            row.className = 'rounded-md border border-white/80 bg-white/90 p-3 shadow-sm';
+            row.className = 'file-row';
             row.innerHTML = `
                 <div class="flex items-center justify-between gap-3">
                     <div class="flex min-w-0 items-center gap-3">
-                        <span class="grid size-9 shrink-0 place-items-center rounded-md bg-gradient-to-br from-teal-100 to-rose-100 text-xs font-black text-slate-700">${t('fileBadge')}</span>
+                        <span class="file-badge size-9">${t('fileBadge')}</span>
                         <div class="min-w-0">
                             <p class="truncate text-sm font-bold">${escapeHtml(file.name)}</p>
                             <p class="text-xs text-slate-500">${formatSize(file.size)}</p>
                         </div>
                     </div>
-                    <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500" data-file-status="${index}">${t('waiting')}</span>
+                    <span class="status-chip px-2 py-1" data-file-status="${index}">${t('waiting')}</span>
                 </div>
-                <div class="mt-2 h-2 rounded-full bg-slate-100">
+                <div class="progress-track mt-2 h-2">
                     <div class="h-2 rounded-full bg-gradient-to-r from-teal-400 via-cyan-500 to-rose-400 transition-all" style="width:0%" data-file-bar="${index}"></div>
                 </div>`;
             list.appendChild(row);
@@ -95,6 +96,7 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
 
         progressSample = {time: now, uploaded};
         totalBar.style.width = `${percent}%`;
+        uploadOrbit?.style.setProperty('--upload-progress', `${percent}%`);
         revealText(totalText, `${percent}%`);
         uploadedText.textContent = `${formatSize(uploaded)} / ${formatSize(total)} ${t('uploadedOf')}`;
         revealText(speedText, smoothedBytesPerSecond > 0 ? `${formatSize(smoothedBytesPerSecond)}/s` : t('starting'));
@@ -159,6 +161,7 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
         pauseButton.classList.remove('hidden');
         uploadForm.classList.add('is-uploading');
         totalBar.classList.add('is-uploading');
+        uploadOrbit?.classList.add('is-uploading');
         statusText.textContent = t('preparing');
         const form = new FormData(uploadForm);
         const payload = Object.fromEntries(form.entries());
@@ -193,6 +196,7 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
         localStorage.removeItem(stateKey);
         uploadForm.classList.remove('is-uploading');
         totalBar.classList.remove('is-uploading');
+        uploadOrbit?.classList.remove('is-uploading');
         statusText.textContent = t('uploadComplete');
         revealText(speedText, t('complete'));
         revealText(etaText, '0s');
@@ -223,6 +227,7 @@ export const initUploadForm = ({csrfToken, revealText, t}) => {
         statusText.textContent = error.message;
         uploadForm.classList.remove('is-uploading');
         totalBar.classList.remove('is-uploading');
+        uploadOrbit?.classList.remove('is-uploading');
         uploadForm.querySelector('button[type="submit"]').disabled = false;
     }));
 
