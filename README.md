@@ -65,7 +65,7 @@ docker compose exec app php artisan migrate --force
 Open `http://localhost:8080`.
 
 Docker is expected to run app, Nginx, PostgreSQL, Redis, worker, and scheduler services.
-The quick installer pulls prebuilt GHCR images. Local Docker builds are only needed for development.
+The quick installer uses `docker-compose.prod.yml` and pulls prebuilt GHCR images. Local Docker builds are only needed for development.
 The host HTTP port is controlled by `PRIVATE_TRANSFER_HTTP_PORT`, defaulting to `8080`.
 Persistent Docker data is stored through host bind mounts, defaulting to `/opt/private-transfer/storage` and `/opt/private-transfer/postgres`.
 

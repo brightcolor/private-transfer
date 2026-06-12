@@ -1,20 +1,76 @@
 services:
   app:
-    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   nginx:
-    build: null
     image: ghcr.io/brightcolor/private-transfer-web:${APP_VERSION:-latest}
+    depends_on:
+      - app
+    ports:
+      - "${PRIVATE_TRANSFER_HTTP_PORT:-8080}:80"
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   worker:
-    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    command: php artisan queue:work --sleep=1 --tries=3 --timeout=3600
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
 
   scheduler:
-    build: null
     image: ghcr.io/brightcolor/private-transfer:${APP_VERSION:-latest}
+    command: sh -c "while true; do php artisan schedule:run --no-interaction; sleep 60; done"
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${PRIVATE_TRANSFER_STORAGE_DIR:-/opt/private-transfer/storage}
+        target: /var/www/html/storage
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: private_transfer
+      POSTGRES_USER: private_transfer
+      POSTGRES_PASSWORD: private_transfer
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${PRIVATE_TRANSFER_POSTGRES_DIR:-/opt/private-transfer/postgres}
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U private_transfer"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

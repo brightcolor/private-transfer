@@ -42,19 +42,23 @@ is_app_root() {
     [ -f "$dir/docker-compose.yml" ] && [ -f "$dir/.env.example" ] && [ -f "$dir/artisan" ]
 }
 
+download_source() {
+    target="$1"
+    tmp_dir="$(mktemp -d)"
+
+    echo "Downloading Private Transfer into $target"
+    $SUDO mkdir -p "$target"
+    curl -fsSL https://github.com/brightcolor/private-transfer/archive/refs/heads/main.tar.gz \
+        | tar -xz -C "$tmp_dir" --strip-components=1
+    $SUDO cp -R "$tmp_dir/." "$target/"
+    rm -rf "$tmp_dir"
+}
+
 if ! is_app_root "$APP_ROOT"; then
-    if is_app_root "$INSTALL_DIR"; then
-        APP_ROOT="$INSTALL_DIR"
-    else
-        tmp_dir="$(mktemp -d)"
-        echo "Downloading Private Transfer into $INSTALL_DIR"
-        $SUDO mkdir -p "$INSTALL_DIR"
-        curl -fsSL https://github.com/brightcolor/private-transfer/archive/refs/heads/main.tar.gz \
-            | tar -xz -C "$tmp_dir" --strip-components=1
-        $SUDO cp -R "$tmp_dir/." "$INSTALL_DIR/"
-        rm -rf "$tmp_dir"
-        APP_ROOT="$INSTALL_DIR"
-    fi
+    download_source "$INSTALL_DIR"
+    APP_ROOT="$INSTALL_DIR"
+elif [ "$APP_ROOT" = "$INSTALL_DIR" ]; then
+    download_source "$INSTALL_DIR"
 fi
 
 echo "Creating host directories in $DATA_DIR"
@@ -203,7 +207,7 @@ export PRIVATE_TRANSFER_HTTP_PORT="$HTTP_PORT"
 cd "$APP_ROOT"
 
 dc() {
-    docker compose -f "$APP_ROOT/docker-compose.yml" -f "$APP_ROOT/docker-compose.prod.yml" "$@"
+    docker compose -f "$APP_ROOT/docker-compose.prod.yml" "$@"
 }
 
 dc pull
