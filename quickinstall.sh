@@ -78,6 +78,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 $SUDO chown -R 82:82 "$STORAGE_DIR"
+$SUDO chmod -R 700 "$POSTGRES_DIR"
 
 ENV_CREATED=false
 
@@ -230,9 +231,10 @@ tries=0
 until dc exec -T postgres pg_isready -U private_transfer >/dev/null 2>&1; do
     tries=$((tries + 1))
 
-    if [ "$tries" -gt 30 ]; then
+    if [ "$tries" -gt 120 ]; then
         echo "PostgreSQL did not become ready in time." >&2
         dc ps
+        dc logs --tail=120 postgres >&2
         exit 1
     fi
 

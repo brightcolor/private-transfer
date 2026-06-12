@@ -31,6 +31,7 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 - Fixed PHP Redis extension builds by keeping PHP build dependencies available until PECL finishes.
 - Made the production Compose file standalone so quickinstall cannot inherit local build definitions.
 - Fixed image-based installs by generating `APP_KEY` in the host `.env` instead of running `artisan key:generate`.
+- Improved PostgreSQL startup handling in quickinstall with a longer wait, log output on timeout, and explicit root entrypoint startup for bind mounts.
 
 ## [0.1.0] - 2026-06-10
 

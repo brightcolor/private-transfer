@@ -51,6 +51,7 @@ services:
 
   postgres:
     image: postgres:18-alpine
+    user: "0:0"
     environment:
       POSTGRES_DB: private_transfer
       POSTGRES_USER: private_transfer
